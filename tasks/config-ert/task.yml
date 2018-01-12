@@ -129,8 +129,8 @@ params:
   PREDELETE_ERRANDS_TO_DISABLE:
 
 inputs:
-  - name: pcf-pipelines
+  - name: vs-pcf-pipelines
 
 run:
-  path: pcf-pipelines/tasks/config-ert/task.sh
+  path: vs-pcf-pipelines/tasks/config-ert/task.sh
 

@@ -13,7 +13,7 @@ params:
   OM_DECRYPTION_PWD:
 
 inputs:
-  - name: pcf-pipelines
+  - name: vs-pcf-pipelines
 
 run:
-  path: pcf-pipelines/tasks/config-opsman/task.sh
+  path: vs-pcf-pipelines/tasks/config-opsman/task.sh

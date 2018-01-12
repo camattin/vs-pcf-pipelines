@@ -30,7 +30,7 @@ params:
 
 inputs:
   - name: pivnet-opsman-product
-  - name: pcf-pipelines
+  - name: vs-pcf-pipelines
 
 run:
-  path: pcf-pipelines/install-pcf/vsphere/tasks/import-opsman/task.sh
+  path: vs-pcf-pipelines/install-pcf/vsphere/tasks/import-opsman/task.sh

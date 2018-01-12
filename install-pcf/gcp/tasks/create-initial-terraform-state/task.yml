@@ -21,12 +21,12 @@ image_resource:
     repository: czero/cflinuxfs2
 
 inputs:
-- name: pcf-pipelines
+- name: vs-pcf-pipelines
 
 params:
   GCP_SERVICE_ACCOUNT_KEY:
   TERRAFORM_STATEFILE_BUCKET:
 
 run:
-  path: pcf-pipelines/install-pcf/gcp/tasks/create-initial-terraform-state/task.sh
+  path: vs-pcf-pipelines/install-pcf/gcp/tasks/create-initial-terraform-state/task.sh
 

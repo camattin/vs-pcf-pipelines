@@ -8,11 +8,11 @@ image_resource:
     repository: czero/cflinuxfs2
 
 inputs:
-  - name: pcf-pipelines 
+  - name: vs-pcf-pipelines 
   - name: json_file
 
 run:
-  path: pcf-pipelines/tasks/install-ert/configure-ert/task.sh
+  path: vs-pcf-pipelines/tasks/install-ert/configure-ert/task.sh
 
 params:
   pcf_iaas:

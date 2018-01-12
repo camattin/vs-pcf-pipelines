@@ -20,7 +20,7 @@ image_resource:
   source: {repository: czero/cflinuxfs2}
 
 inputs:
-  - name: pcf-pipelines
+  - name: vs-pcf-pipelines
 
 outputs:
   - name: diagnostic-report
@@ -31,4 +31,4 @@ params:
   OPSMAN_URI:
 
 run:
-  path: pcf-pipelines/tasks/export-opsmgr-diagnostic-report/task.sh
+  path: vs-pcf-pipelines/tasks/export-opsmgr-diagnostic-report/task.sh

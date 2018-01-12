@@ -20,8 +20,8 @@ params:
   JMX_USE_SSL:
 
 inputs:
-  - name: pcf-pipelines
+  - name: vs-pcf-pipelines
   - name: tool-om
 
 run:
-  path: pcf-pipelines/tasks/config-ops-metrics/task.sh
+  path: vs-pcf-pipelines/tasks/config-ops-metrics/task.sh

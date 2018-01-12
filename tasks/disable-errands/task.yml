@@ -6,7 +6,7 @@ image_resource:
   source: {repository: czero/cflinuxfs2}
 
 inputs:
-- name: pcf-pipelines
+- name: vs-pcf-pipelines
 
 params:
   PRODUCT_NAME:
@@ -17,4 +17,4 @@ params:
   WHEN_CHANGED:
 
 run:
-  path: pcf-pipelines/tasks/disable-errands/task.sh
+  path: vs-pcf-pipelines/tasks/disable-errands/task.sh
