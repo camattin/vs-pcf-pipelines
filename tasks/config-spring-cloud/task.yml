@@ -20,7 +20,7 @@ params:
   PREDELETE_ERRANDS_TO_DISABLE:
 
 inputs:
-  - name: pcf-tile-automation
+  - name: vs-pcf-pipelines
   - name: tool-om
 
 run:
