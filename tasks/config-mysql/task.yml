@@ -43,8 +43,8 @@ params:
   PREDELETE_ERRANDS_TO_DISABLE:
 
 inputs:
-  - name: pcf-tile-automation
+  - name: vs-pcf-pipelines
   - name: tool-om
 
 run:
-  path: pcf-tile-automation/tasks/config-mysql/task.sh
+  path: vs-pcf-pipelines/tasks/config-mysql/task.sh
