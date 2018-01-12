@@ -63,7 +63,7 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
     "value": $MYSQL_PROXY_STARTUP_DELAY
   },
   ".cf-mysql-broker.bind_hostname": {
-    "value": null
+    "value": "$MYSQL_PROXY_SERVICE_HOSTNAME"
   },
   ".properties.backup_options.enable.cron_schedule": {
     "value": "0"
