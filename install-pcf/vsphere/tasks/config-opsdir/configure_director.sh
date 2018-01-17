@@ -171,11 +171,11 @@ security_configuration=$(
 network_assignment=$(
 echo '{}' |
 jq \
-  --arg infra_availability_zones "$INFRA_NW_AZS" \
+  --arg singleton_availability_zone "$OPS_DIR_SINGLETON" \
   --arg network "$INFRA_NETWORK_NAME" \
   '. +
   {
-    "singleton_availability_zone": "$OPS_DIR_SINGLETON",
+    "singleton_availability_zone": "$singleton_availability_zone",
     "network": $network
   }'
 )
