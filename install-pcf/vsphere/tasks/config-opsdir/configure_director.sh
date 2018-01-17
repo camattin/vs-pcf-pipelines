@@ -80,7 +80,6 @@ network_configuration=$(
     --arg dynamic_services_dns "$DYNAMIC_SERVICES_NW_DNS" \
     --arg dynamic_services_gateway "$DYNAMIC_SERVICES_NW_GATEWAY" \
     --arg dynamic_services_availability_zones "$DYNAMIC_SERVICES_NW_AZS" \
-    --arg opsdir_singleton_az "$OPS_DIR_SINGLETON" \
     '. +
     {
       "icmp_checks_enabled": $icmp_checks_enabled,
@@ -175,7 +174,7 @@ jq \
   --arg network "$INFRA_NETWORK_NAME" \
   '. +
   {
-    "singleton_availability_zone": "$opsdir_singleton_az",
+    "singleton_availability_zone": "$OPS_DIR_SINGLETON",
     "network": $network
   }'
 )
