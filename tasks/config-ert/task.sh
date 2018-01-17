@@ -4,7 +4,8 @@ set -eux
 
 env
 
-source pcf-pipelines/functions/generate_cert.sh
+# Don't generate any certs, always provide them in the secrets
+#source pcf-pipelines/functions/generate_cert.sh
 
 if [[ -z "$SSL_CERT" ]]; then
   domains=(
