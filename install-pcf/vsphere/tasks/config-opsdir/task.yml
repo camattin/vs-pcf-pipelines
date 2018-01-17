@@ -69,6 +69,7 @@ params:
   NSX_USERNAME:
   NSX_PASSWORD:
   NSX_CA_CERTIFICATE:
+  OPS_DIR_SINGLETON:
 
 inputs:
   - name: vs-pcf-pipelines
