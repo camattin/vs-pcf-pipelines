@@ -14,6 +14,10 @@ file_path=`find ./pivnet-opsman-product/ -name *.ova`
 
 echo $file_path
 
+# VM Name is host the ops man VM is named in vCenter
+VM_DATE=`date +%b-%d-%Y`
+VM_NAME=opsman-${VM_DATE}
+
 govc import.spec $file_path | python -m json.tool > om-import.json
 
 cat > filters <<'EOF'
@@ -40,7 +44,7 @@ jq \
   --arg adminPassword "$OPS_MGR_SSH_PWD" \
   --arg customHostname "$OM_VM_NAME" \
   --arg network "$OM_VM_NETWORK" \
-  --arg vmName "$OM_VM_NAME" \
+  --arg vmName "$VM_NAME" \
   --arg diskType "$OM_DISK_TYPE" \
   --argjson powerOn $OM_VM_POWER_STATE \
   --from-file filters \
