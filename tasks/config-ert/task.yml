@@ -129,6 +129,7 @@ params:
   PREDELETE_ERRANDS_TO_DISABLE:
   ROUTER_TLS_CIPHERS:
   HAPROXY_TLS_CIPHERS:
+  ERT_ERRANDS_TO_WHENCHANGED:
 
 inputs:
   - name: vs-pcf-pipelines
