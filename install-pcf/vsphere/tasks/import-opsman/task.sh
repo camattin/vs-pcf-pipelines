@@ -14,9 +14,10 @@ file_path=`find ./pivnet-opsman-product/ -name *.ova`
 
 echo $file_path
 
-# VM Name is host the ops man VM is named in vCenter
+# VM Name is the ops man VM display name in vCenter
 VM_DATE=`date +%b-%d-%Y`
-VM_NAME=opsman-${VM_DATE}
+VM_NAME_VERSION=`echo $file_path | sed 's/.*-vsphere-\(.*\)\.ova/\1/g'`
+VM_NAME=opsman-${VM_NAME_VERSION}-${VM_DATE}
 
 govc import.spec $file_path | python -m json.tool > om-import.json
 
