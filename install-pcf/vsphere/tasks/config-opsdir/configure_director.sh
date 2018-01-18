@@ -169,13 +169,12 @@ security_configuration=$(
 )
 
 network_assignment=$(
-echo '{}' |
-jq \
+jq -n \
   --arg singleton_availability_zone "$OPS_DIR_SINGLETON" \
   --arg network "$INFRA_NETWORK_NAME" \
-  '. +
+  '
   {
-    "singleton_availability_zone": "$singleton_availability_zone",
+    "singleton_availability_zone": $singleton_availability_zone,
     "network": $network
   }'
 )
