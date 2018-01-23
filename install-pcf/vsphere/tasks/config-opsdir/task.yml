@@ -70,6 +70,11 @@ params:
   NSX_PASSWORD:
   NSX_CA_CERTIFICATE:
   OPS_DIR_SINGLETON:
+  SYSLOG_ENABLED: {{syslog_enabled}}
+  SYSLOG_HOST: {{syslog_host}}
+  SYSLOG_PORT: {{syslog_port}}
+  SYSLOG_PROTOCOL: {{syslog_protocol}}
+  SYSLOG_TLS: {{syslog_tls}}
 
 inputs:
   - name: vs-pcf-pipelines
