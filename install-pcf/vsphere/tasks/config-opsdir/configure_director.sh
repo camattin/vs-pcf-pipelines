@@ -202,11 +202,11 @@ om-linux \
 
 syslog_configuration=$(cat <<-EOF
 {
-  "syslog_enabled": "$SYSLOG_ENABLED",
-  "syslog_host": "$SYSLOG_HOST",
-  "syslog_port": "$SYSLOG_PORT",
-  "syslog_protocol": "$SYSLOG_PROTOCOL",
-  "syslog_tls": "$SYSLOG_TLS"
+  "enabled": $SYSLOG_ENABLED,
+  "address": "$SYSLOG_HOST",
+  "port": "$SYSLOG_PORT",
+  "transport_protocol": "$SYSLOG_PROTOCOL",
+  "tls_enabled": $SYSLOG_TLS
 }
 EOF
 )
