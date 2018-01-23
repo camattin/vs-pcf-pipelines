@@ -1,6 +1,11 @@
 #!/bin/bash
+
 set -x
 env
+
+mv tool-om/om-linux /usr/local/bin/om-linux
+chmod +x /usr/local/bin/om-linux
+
 which om-linux
 om-linux --version
 
