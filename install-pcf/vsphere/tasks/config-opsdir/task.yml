@@ -78,6 +78,7 @@ params:
 
 inputs:
   - name: vs-pcf-pipelines
+  - name: tool-om
 
 run:
   path: vs-pcf-pipelines/install-pcf/vsphere/tasks/config-opsdir/task.sh
