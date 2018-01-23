@@ -1,6 +1,9 @@
 #!/bin/bash
 set -x
 env
+which om-linux
+om-linux --version
+
 function configure_director () {
 
 iaas_configuration=$(cat <<-EOF
