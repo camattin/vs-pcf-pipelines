@@ -190,6 +190,7 @@ om-linux \
   --director-configuration "$director_config"
 
 # om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD curl -p "/api/v0/staged/director/availability_zones" -x PUT -d "$az_configuration"
+om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD configure-director -a "$az_configuration"
 
 om-linux \
   --target https://$OPS_MGR_HOST \
