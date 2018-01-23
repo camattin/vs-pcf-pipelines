@@ -200,13 +200,15 @@ om-linux \
 # om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD curl -p "/api/v0/staged/director/availability_zones" -x PUT -d "$az_configuration"
 # om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD configure-director -a "$az_configuration"
 
-syslog_configuration=$(
-jq -n \
-  --arg syslog_enabled "$SYSLOG_ENABLED" \
-  --arg syslog_host "$SYSLOG_HOST" \
-  --arg syslog_port "$SYSLOG_PORT" \
-  --arg syslog_protocol "$SYSLOG_PROTOCOL" \
-  --arg syslog_tls "$SYSLOG_TLS"
+syslog_configuration=$(cat <<-EOF
+{
+  "syslog_enabled": "$SYSLOG_ENABLED",
+  "syslog_host": "$SYSLOG_HOST",
+  "syslog_port": "$SYSLOG_PORT",
+  "syslog_protocol": "$SYSLOG_PROTOCOL",
+  "syslog_tls": "$SYSLOG_TLS"
+}
+EOF
 )
 
 om-linux -t https://$OPS_MGR_HOST -k -u $OPS_MGR_USR -p $OPS_MGR_PWD configure-director -l "$syslog_configuration"
