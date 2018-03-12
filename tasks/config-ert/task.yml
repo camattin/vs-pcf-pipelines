@@ -129,7 +129,8 @@ params:
   PREDELETE_ERRANDS_TO_DISABLE:
   ROUTER_TLS_CIPHERS:
   HAPROXY_TLS_CIPHERS:
-
+  DIEGO_CELL_TYPE:
+  
 inputs:
   - name: vs-pcf-pipelines
 
