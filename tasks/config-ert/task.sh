@@ -448,6 +448,7 @@ else
 {
   diego_cell="{ \"instances\": $diego_cell_instances }"
 }
+fi
 
 cf_resources=$(
   jq -n \
