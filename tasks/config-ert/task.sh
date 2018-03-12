@@ -440,16 +440,6 @@ cf_network=$(
     '
 )
 
-if $diego_cell_type != "" then
-{
-  diego_cell="{ \"instances\": $diego_cell_instances, \"instance_type\": { \"id\": \"$diego_cell_type\" } }"
-}
-else
-{
-  diego_cell="{ \"instances\": $diego_cell_instances }"
-}
-fi
-
 cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
@@ -469,6 +459,7 @@ cf_resources=$(
     --argjson cloud_controller_worker_instances $CLOUD_CONTROLLER_WORKER_INSTANCES \
     --argjson diego_brain_instances $DIEGO_BRAIN_INSTANCES \
     --argjson diego_cell_instances $DIEGO_CELL_INSTANCES \
+    --argjson diego_cell_type $DIEGO_CELL_TYPE \
     --argjson loggregator_tc_instances $LOGGREGATOR_TC_INSTANCES \
     --argjson tcp_router_instances $TCP_ROUTER_INSTANCES \
     --argjson syslog_adapter_instances $SYSLOG_ADAPTER_INSTANCES \
@@ -546,13 +537,20 @@ cf_resources=$(
       "clock_global": { "instances": $clock_global_instances },
       "cloud_controller_worker": { "instances": $cloud_controller_worker_instances },
       "diego_brain": { "instances": $diego_brain_instances },
-      "diego_cell": $diego_cell,
+      "diego_cell": { "instances": $diego_cell_instances },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances },
       "tcp_router": { "instances": $tcp_router_instances },
       "syslog_adapter": { "instances": $syslog_adapter_instances },
       "doppler": { "instances": $doppler_instances }
     }
 
+    end
+    |
+    
+    if $diego_cell_type != "" then
+    {
+      .diego_cell |= . + { "instance_type": { "id": "$diego_cell_type" } }
+    }
     end
 
     |
