@@ -536,6 +536,14 @@ cf_resources=$(
       "clock_global": { "instances": $clock_global_instances },
       "cloud_controller_worker": { "instances": $cloud_controller_worker_instances },
       "diego_brain": { "instances": $diego_brain_instances },
+      if $diego_cell_type != "" then
+      {
+        "diego_cell": { "instances": $diego_cell_instances, "instance_type": { "id": "$diego_cell_type" } }
+      }
+      else
+      {
+        "diego_cell": { "instances": $diego_cell_instances }
+      }
       "diego_cell": { "instances": $diego_cell_instances },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances },
       "tcp_router": { "instances": $tcp_router_instances },
