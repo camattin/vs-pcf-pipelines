@@ -548,7 +548,7 @@ cf_resources=$(
     |
     
     if $diego_cell_type != "" then
-      .diego_cell |= . + { "instance_type": { "id": "$diego_cell_type" } }
+      .diego_cell |= . + { "instance_type": { "id": $diego_cell_type } }
     else
       .
     end
