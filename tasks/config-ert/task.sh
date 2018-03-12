@@ -459,12 +459,12 @@ cf_resources=$(
     --argjson cloud_controller_worker_instances $CLOUD_CONTROLLER_WORKER_INSTANCES \
     --argjson diego_brain_instances $DIEGO_BRAIN_INSTANCES \
     --argjson diego_cell_instances $DIEGO_CELL_INSTANCES \
-    --argjson diego_cell_type $DIEGO_CELL_TYPE \
     --argjson loggregator_tc_instances $LOGGREGATOR_TC_INSTANCES \
     --argjson tcp_router_instances $TCP_ROUTER_INSTANCES \
     --argjson syslog_adapter_instances $SYSLOG_ADAPTER_INSTANCES \
     --argjson doppler_instances $DOPPLER_INSTANCES \
     --argjson internet_connected $INTERNET_CONNECTED \
+    --arg diego_cell_type $DIEGO_CELL_TYPE \
     --arg ha_proxy_elb_name "$HA_PROXY_LB_NAME" \
     --arg ha_proxy_floating_ips "$HAPROXY_FLOATING_IPS" \
     --arg tcp_router_nsx_security_group "${TCP_ROUTER_NSX_SECURITY_GROUP}" \
