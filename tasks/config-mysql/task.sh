@@ -72,6 +72,9 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
     "value": {
       "secret": "$MYSQL_ROADMIN_PASSWORD"
     }
+  },
+  ".mysql.allow_remote_admin_access": {
+    "value": "$MYSQL_REMOTE_ADMIN"
   }
 }
 EOF
