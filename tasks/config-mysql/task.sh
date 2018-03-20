@@ -67,6 +67,11 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
   },
   ".properties.backup_options.enable.cron_schedule": {
     "value": "0"
+  },
+  ".mysql.roadmin_password": {
+    "value": {
+      "secret": "$MYSQL_ROADMIN_PASSWORD"
+    }
   }
 }
 EOF
