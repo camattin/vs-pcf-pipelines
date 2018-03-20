@@ -43,6 +43,7 @@ params:
   ERRANDS_TO_WHENCHANGED:
   PREDELETE_ERRANDS_TO_DISABLE:
   MYSQL_ROADMIN_PASSWORD:
+  MYSQL_REMOTE_ADMIN:
 
 inputs:
   - name: vs-pcf-pipelines
