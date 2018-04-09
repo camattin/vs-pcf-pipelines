@@ -4,34 +4,6 @@ set -eux
 
 env
 
-source pcf-pipelines/functions/generate_cert.sh
-
-if [[ -z "$SSL_CERT" ]]; then
-  domains=(
-    "*.${SYSTEM_DOMAIN}"
-    "*.${APPS_DOMAIN}"
-    "*.login.${SYSTEM_DOMAIN}"
-    "*.uaa.${SYSTEM_DOMAIN}"
-  )
-
-  certificates=$(generate_cert "${domains[*]}")
-  SSL_CERT=`echo $certificates | jq --raw-output '.certificate'`
-  SSL_PRIVATE_KEY=`echo $certificates | jq --raw-output '.key'`
-fi
-
-
-if [[ -z "$SAML_SSL_CERT" ]]; then
-  saml_cert_domains=(
-    "*.${SYSTEM_DOMAIN}"
-    "*.login.${SYSTEM_DOMAIN}"
-    "*.uaa.${SYSTEM_DOMAIN}"
-  )
-
-  saml_certificates=$(generate_cert "${saml_cert_domains[*]}")
-  SAML_SSL_CERT=$(echo $saml_certificates | jq --raw-output '.certificate')
-  SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
-fi
-
 function formatCredhubEncryptionKeysJson() {
     local credhub_encryption_key_name1="${1}"
     local credhub_encryption_key_secret1=${2//$'\n'/'\n'}
