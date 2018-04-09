@@ -561,6 +561,7 @@ cf_resources=$(
     else
       .
     end
+
     |
 
     if $ha_proxy_elb_name != "" then
