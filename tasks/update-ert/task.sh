@@ -115,7 +115,7 @@ cf_properties=$(
       ".properties.route_services.enable.ignore_ssl_cert_verification": {
         "value": $ignore_ssl_cert
       },
-      ".properties.container_networking_interface_plugin": {
+      ".properties.container_networking_interface_plugin.silk.network_cidr": {
         "value": $container_networking_interface_plugin
       },
       ".properties.security_acknowledgement": {
