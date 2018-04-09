@@ -4,33 +4,34 @@ set -eux
 
 env
 
-function formatCredhubEncryptionKeysJson() {
-    local credhub_encryption_key_name1="${1}"
-    local credhub_encryption_key_secret1=${2//$'\n'/'\n'}
-    local credhub_primary_encryption_name="${3}"
-    credhub_encryption_keys_json="{
-            \"name\": \"$credhub_encryption_key_name1\",
-            \"key\":{
-                \"secret\": \"$credhub_encryption_key_secret1\"
-             }"
-    if [[ "${credhub_primary_encryption_name}" == $credhub_encryption_key_name1 ]]; then
-        credhub_encryption_keys_json="$credhub_encryption_keys_json, \"primary\": true}"
-    else
-        credhub_encryption_keys_json="$credhub_encryption_keys_json}"
-    fi
-    echo "$credhub_encryption_keys_json"
-}
+# Don't generate any certs, always provide them in the secrets
+#source pcf-pipelines/functions/generate_cert.sh
 
-credhub_encryption_keys_json=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME1}" "${CREDHUB_ENCRYPTION_KEY_SECRET1}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
-if isPopulated "${CREDHUB_ENCRYPTION_KEY_NAME2}"; then
-    credhub_encryption_keys_json2=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME2}" "${CREDHUB_ENCRYPTION_KEY_SECRET2}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
-    credhub_encryption_keys_json="$credhub_encryption_keys_json,$credhub_encryption_keys_json2"
+if [[ -z "$SSL_CERT" ]]; then
+  domains=(
+    "*.${SYSTEM_DOMAIN}"
+    "*.${APPS_DOMAIN}"
+    "*.login.${SYSTEM_DOMAIN}"
+    "*.uaa.${SYSTEM_DOMAIN}"
+  )
+
+  certificates=$(generate_cert "${domains[*]}")
+  SSL_CERT=`echo $certificates | jq --raw-output '.certificate'`
+  SSL_PRIVATE_KEY=`echo $certificates | jq --raw-output '.key'`
 fi
-if isPopulated "${CREDHUB_ENCRYPTION_KEY_NAME3}"; then
-    credhub_encryption_keys_json3=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME3}" "${CREDHUB_ENCRYPTION_KEY_SECRET3}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
-    credhub_encryption_keys_json="$credhub_encryption_keys_json,$credhub_encryption_keys_json3"
+
+
+if [[ -z "$SAML_SSL_CERT" ]]; then
+  saml_cert_domains=(
+    "*.${SYSTEM_DOMAIN}"
+    "*.login.${SYSTEM_DOMAIN}"
+    "*.uaa.${SYSTEM_DOMAIN}"
+  )
+
+  saml_certificates=$(generate_cert "${saml_cert_domains[*]}")
+  SAML_SSL_CERT=$(echo $saml_certificates | jq --raw-output '.certificate')
+  SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
 fi
-credhub_encryption_keys_json="[$credhub_encryption_keys_json]"
 
 cf_properties=$(
   jq -n \
@@ -102,7 +103,6 @@ cf_properties=$(
     --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
     --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
-    --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     --arg container_networking_nw_cidr "$CONTAINER_NETWORKING_NW_CIDR" \
     '
     {
@@ -444,7 +444,6 @@ cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
     --argjson consul_server_instances $CONSUL_SERVER_INSTANCES \
-    --argjson credhub_instances $CREDHUB_INSTANCES \
     --argjson nats_instances $NATS_INSTANCES \
     --argjson nfs_server_instances $NFS_SERVER_INSTANCES \
     --argjson mysql_proxy_instances $MYSQL_PROXY_INSTANCES \
@@ -465,6 +464,7 @@ cf_resources=$(
     --argjson syslog_adapter_instances $SYSLOG_ADAPTER_INSTANCES \
     --argjson doppler_instances $DOPPLER_INSTANCES \
     --argjson internet_connected $INTERNET_CONNECTED \
+    --arg diego_cell_type "$DIEGO_CELL_TYPE" \
     --arg ha_proxy_elb_name "$HA_PROXY_LB_NAME" \
     --arg ha_proxy_floating_ips "$HAPROXY_FLOATING_IPS" \
     --arg tcp_router_nsx_security_group "${TCP_ROUTER_NSX_SECURITY_GROUP}" \
@@ -523,7 +523,6 @@ cf_resources=$(
 
     {
       "consul_server": { "instances": $consul_server_instances },
-      "credhub\": { \"instances\": $credhub_instances },
       "nats": { "instances": $nats_instances },
       "nfs_server": { "instances": $nfs_server_instances },
       "mysql_proxy": { "instances": $mysql_proxy_instances },
@@ -545,6 +544,13 @@ cf_resources=$(
       "doppler": { "instances": $doppler_instances }
     }
 
+    end
+    |
+    
+    if $diego_cell_type != "" then
+      .diego_cell |= . + { "instance_type": { "id": $diego_cell_type } }
+    else
+      .
     end
 
     |
