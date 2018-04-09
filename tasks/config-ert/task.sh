@@ -557,7 +557,7 @@ cf_resources=$(
     |
     
     if $autoscaling_errand_type != "" then
-      .autoscaling-register-broker |= . + { "instance_type": { "id": $autoscaling_errand_type } }
+      ".autoscaling-register-broker" |= . + { "instance_type": { "id": $autoscaling_errand_type } }
     else
       .
     end
