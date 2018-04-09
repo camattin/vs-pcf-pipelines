@@ -166,7 +166,7 @@ cf_properties=$(
       ".tcp_router.static_ips": {
         "value": $tcp_router_static_ips
       },
-      ".push-apps-manager.company_name": {
+      ".push_apps_manager_company_name": {
         "value": $company_name
       },
       ".diego_brain.static_ips": {
