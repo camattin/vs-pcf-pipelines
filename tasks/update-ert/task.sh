@@ -33,6 +33,23 @@ if [[ -z "$SAML_SSL_CERT" ]]; then
   SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
 fi
 
+function formatCredhubEncryptionKeysJson() {
+    local credhub_encryption_key_name1="${1}"
+    local credhub_encryption_key_secret1=${2//$'\n'/'\n'}
+    local credhub_primary_encryption_name="${3}"
+    credhub_encryption_keys_json="{
+            \"name\": \"$credhub_encryption_key_name1\",
+            \"key\":{
+                \"secret\": \"$credhub_encryption_key_secret1\"
+             }"
+    if [[ "${credhub_primary_encryption_name}" == $credhub_encryption_key_name1 ]]; then
+        credhub_encryption_keys_json="$credhub_encryption_keys_json, \"primary\": true}"
+    else
+        credhub_encryption_keys_json="$credhub_encryption_keys_json}"
+    fi
+    echo "$credhub_encryption_keys_json"
+}
+
 cf_properties=$(
   jq -n \
     --arg tcp_routing "$TCP_ROUTING" \
