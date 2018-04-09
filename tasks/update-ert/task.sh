@@ -131,6 +131,7 @@ cf_properties=$(
     --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
     --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
+    --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     '
     {
@@ -381,6 +382,15 @@ cf_properties=$(
 
     +
 
+    # Credhub encryption keys
+    {
+      ".properties.credhub_key_encryption_passwords": {
+        "value": $credhub_encryption_keys
+      }
+    }
+
+    +
+
     # MySQL Backups
     if $mysql_backups == "s3" then
       {
@@ -460,6 +470,7 @@ cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
     --argjson consul_server_instances $CONSUL_SERVER_INSTANCES \
+    --argjson credhub_instances $CREDHUB_INSTANCES \
     --argjson nats_instances $NATS_INSTANCES \
     --argjson nfs_server_instances $NFS_SERVER_INSTANCES \
     --argjson mysql_proxy_instances $MYSQL_PROXY_INSTANCES \
@@ -539,6 +550,7 @@ cf_resources=$(
 
     {
       "consul_server": { "instances": $consul_server_instances },
+      "credhub": { "instances": $credhub_instances },
       "nats": { "instances": $nats_instances },
       "nfs_server": { "instances": $nfs_server_instances },
       "mysql_proxy": { "instances": $mysql_proxy_instances },
