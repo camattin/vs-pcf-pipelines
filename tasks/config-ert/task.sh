@@ -557,6 +557,14 @@ cf_resources=$(
 
     |
 
+    if $autoscaling_errand_type != "" then
+      "autoscaling-register-broker" |= { "instance_type": { "id": $diego_cell_type } }
+    else
+      .
+    end
+
+    |
+
     if $ha_proxy_elb_name != "" then
       .ha_proxy |= . + { "elb_names": [ $ha_proxy_elb_name ] }
     else
