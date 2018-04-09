@@ -50,6 +50,17 @@ function formatCredhubEncryptionKeysJson() {
     echo "$credhub_encryption_keys_json"
 }
 
+credhub_encryption_keys_json=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME1}" "${CREDHUB_ENCRYPTION_KEY_SECRET1}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
+if isPopulated "${CREDHUB_ENCRYPTION_KEY_NAME2}"; then
+    credhub_encryption_keys_json2=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME2}" "${CREDHUB_ENCRYPTION_KEY_SECRET2}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
+    credhub_encryption_keys_json="$credhub_encryption_keys_json,$credhub_encryption_keys_json2"
+fi
+if isPopulated "${CREDHUB_ENCRYPTION_KEY_NAME3}"; then
+    credhub_encryption_keys_json3=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME3}" "${CREDHUB_ENCRYPTION_KEY_SECRET3}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
+    credhub_encryption_keys_json="$credhub_encryption_keys_json,$credhub_encryption_keys_json3"
+fi
+credhub_encryption_keys_json="[$credhub_encryption_keys_json]"
+
 cf_properties=$(
   jq -n \
     --arg tcp_routing "$TCP_ROUTING" \
