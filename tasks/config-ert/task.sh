@@ -539,7 +539,7 @@ cf_resources=$(
       "cloud_controller_worker": { "instances": $cloud_controller_worker_instances },
       "diego_brain": { "instances": $diego_brain_instances },
       "diego_cell": { "instances": $diego_cell_instances },
-      "autoscaling-register-broker": { "instances": 1, "instance_type": { "id": $autoscaling_errand_type } },
+      "autoscaling-register-broker": { "instance_type": { "id": $autoscaling_errand_type } },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances },
       "tcp_router": { "instances": $tcp_router_instances },
       "syslog_adapter": { "instances": $syslog_adapter_instances },
