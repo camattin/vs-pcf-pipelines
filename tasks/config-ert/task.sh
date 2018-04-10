@@ -33,6 +33,12 @@ if [[ -z "$SAML_SSL_CERT" ]]; then
   SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
 fi
 
+if [[ -z "$AUTOSCALING_ERRAND_TYPE" ]]; then
+   autoscaling_errand_type="automatic"
+else
+   autoscaling_errand_type="$AUTOSCALING_ERRAND_TYPE"
+fi
+
 cf_properties=$(
   jq -n \
     --arg tcp_routing "$TCP_ROUTING" \
