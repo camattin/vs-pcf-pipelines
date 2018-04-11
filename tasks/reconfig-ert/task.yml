@@ -136,10 +136,11 @@ params:
   CREDHUB_ENCRYPTION_KEY_NAME3:
   CREDHUB_ENCRYPTION_KEY_SECRET3:
   CREDHUB_PRIMARY_ENCRYPTION_NAME:
+  AUTOSCALING_ERRAND_TYPE:
 
 inputs:
   - name: vs-pcf-pipelines
 
 run:
-  path: vs-pcf-pipelines/tasks/update-ert/task.sh
+  path: vs-pcf-pipelines/tasks/reconfig-ert/task.sh
 

@@ -33,6 +33,12 @@ if [[ -z "$SAML_SSL_CERT" ]]; then
   SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
 fi
 
+if [[ -z "$AUTOSCALING_ERRAND_TYPE" ]]; then
+   autoscaling_errand_type="automatic"
+else
+   autoscaling_errand_type="$AUTOSCALING_ERRAND_TYPE"
+fi
+
 function formatCredhubEncryptionKeysJson() {
     local credhub_encryption_key_name1="${1}"
     local credhub_encryption_key_secret1=${2//$'\n'/'\n'}
@@ -492,6 +498,7 @@ cf_resources=$(
     --argjson doppler_instances $DOPPLER_INSTANCES \
     --argjson internet_connected $INTERNET_CONNECTED \
     --arg diego_cell_type "$DIEGO_CELL_TYPE" \
+    --arg autoscaling_errand_type "$AUTOSCALING_ERRAND_TYPE" \
     --arg ha_proxy_elb_name "$HA_PROXY_LB_NAME" \
     --arg ha_proxy_floating_ips "$HAPROXY_FLOATING_IPS" \
     --arg tcp_router_nsx_security_group "${TCP_ROUTER_NSX_SECURITY_GROUP}" \
@@ -566,6 +573,7 @@ cf_resources=$(
       "cloud_controller_worker": { "instances": $cloud_controller_worker_instances },
       "diego_brain": { "instances": $diego_brain_instances },
       "diego_cell": { "instances": $diego_cell_instances },
+      "autoscaling-register-broker": { "instance_type": { "id": $autoscaling_errand_type } },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances },
       "tcp_router": { "instances": $tcp_router_instances },
       "syslog_adapter": { "instances": $syslog_adapter_instances },
