@@ -16,6 +16,32 @@ function fn_other_azs {
   echo $azs_csv | awk -F "," -v braceopen='{' -v braceclose='}' -v name='"name":' -v quote='"' -v OFS='"},{"name":"' '$1=$1 {print braceopen name quote $0 quote braceclose}'
 }
 
+#stuffs for setting vm type to accomodate increased memory utilization in errands from runtime config deployments
+if [[ -z "$SCS_BROKER_DEPLOYER_TYPE" ]]; then
+   scs_broker_deployer_type="automatic"
+else
+   scs_broker_deployer_type="$SCS_BROKER_DEPLOYER_TYPE"
+fi
+
+if [[ -z "$SCS_BROKER_REGISTRAR_TYPE" ]]; then
+   scs_broker_registrar_type="automatic"
+else
+   scs_broker_registrar_type="$SCS_BROKER_REGISTRAR_TYPE"
+fi
+
+if [[ -z "$SCS_SMOKE_TEST_TYPE" ]]; then
+   scs_smoke_test_type="automatic"
+else
+   scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"
+fi
+
+if [[ -z "$SCS_BROKER_DEREGISTRAR_TYPE" ]]; then
+   scs_broker_deregistrar_type="automatic"
+else
+   scs_broker_deregistrar_type="$SCS_BROKER_DEREGISTRAR_TYPE"
+fi
+####END of Stuffs for setting resource vm type########
+
 OTHER_AZS=$(fn_other_azs $OTHER_JOB_AZS)
 
 NETWORK=$(cat <<-EOF
@@ -41,10 +67,21 @@ EOF
 
 RESOURCES=$(cat <<-EOF
 {
+  "deploy-service-broker": { 
+    "instance_type": {"id": "$scs_broker_deployer_type"}
+  },
+  "bregister-service-broker": {
+    "instance_type": {"id": "$scs_broker_registrar_type"}
+  },
+  "run-smoke-tests": {
+    "instance_type": {"id": "$scs_smoke_test_type"}
+  },
+  "destroy-service-broker": {
+    "instance_type": {"id": "$scs_broker_deregistrar_type"}
+  }
 }
 EOF
 )
-
 $CMD -t https://$OPS_MGR_HOST -u $OPS_MGR_USR -p $OPS_MGR_PWD -k configure-product -n $PRODUCT_NAME -p "$PROPERTIES" -pn "$NETWORK" -pr "$RESOURCES"
 
 if [[ -z "$ERRANDS_TO_DISABLE" ]] || [[ "$ERRANDS_TO_DISABLE" == "none" ]]; then
@@ -146,27 +183,4 @@ else
   fi
 fi
 
-#stuffs for setting vm type to accomodate increased memory utilization in errands from runtime config deployments
-if [[ -z "$SCS_BROKER_DEPLOYER_TYPE" ]]; then
-   scs_broker_deployer_type="automatic"
-else
-   scs_broker_deployer_type="$SCS_BROKER_DEPLOYER_TYPE"
-fi
-
-if [[ -z "$SCS_BROKER_REGISTRAR_TYPE" ]]; then
-   scs_broker_registrar_type="automatic"
-else
-   scs_broker_registrar_type="$SCS_BROKER_REGISTRAR_TYPE"
-fi
-
-if [[ -z "$SCS_SMOKE_TEST_TYPE" ]]; then
-   scs_smoke_test_type="automatic"
-else
-   scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"
-fi
-
-if [[ -z "$SCS_BROKER_DEREGISTRAR_TYPE" ]]; then
-   scs_broker_deregistrar_type="automatic"
-else
-   scs_broker_deregistrar_type="$SCS_BROKER_DEREGISTRAR_TYPE"
-fi
+#stuffs for setting vm type to accomodate increased memory utilization in errands from runtime config deployments#
