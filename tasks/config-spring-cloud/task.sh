@@ -48,7 +48,7 @@ RESOURCES=$(cat <<-EOF
     "instance_type": {"id": "$scs_smoke_test_type"}
   },
   "destroy-service-broker": {
-    "instance_typet": {"id": "$scs_broker_deregistrar_type"}
+    "instance_type": {"id": "$scs_broker_deregistrar_type"}
   }
 }
 EOF
