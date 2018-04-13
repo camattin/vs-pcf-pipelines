@@ -32,7 +32,7 @@ fi
 if [[ -z "$scs_smoke_test_type" ]]; then
    scs_smoke_test_type="automatic"
 else
-   scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"
+   scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"; then
 fi
 
 if [[ -z "$scs_broker_deregistrar_type" ]]; then
