@@ -1,5 +1,3 @@
-#!/bin/bash -e
-
 #mv tool-om/om-linux-* tool-om/om-linux
 chmod +x tool-om/om-linux
 CMD=./tool-om/om-linux
@@ -17,48 +15,44 @@ function fn_other_azs {
 }
 
 #stuffs for setting vm type to accomodate increased memory utilization in errands from runtime config deployments
-if [[ -z "$scs_broker_deployer_type" ]]; then
+ if [[ -z "$scs_broker_deployer_type" ]]; then
    scs_broker_deployer_type="automatic"
 else
    scs_broker_deployer_type="$SCS_BROKER_DEPLOYER_TYPE"
 fi
-
 if [[ -z "$scs_broker_registrar_type" ]]; then
    scs_broker_registrar_type="automatic"
 else
    scs_broker_registrar_type="$SCS_BROKER_REGISTRAR_TYPE"
 fi
-
 if [[ -z "$scs_smoke_test_type" ]]; then
    scs_smoke_test_type="automatic"
 else
-   scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"; 
+   scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"
 fi
-
 if [[ -z "$scs_broker_deregistrar_type" ]]; then
    scs_broker_deregistrar_type="automatic"
 else
    scs_broker_deregistrar_type="$SCS_BROKER_DEREGISTRAR_TYPE"
 fi
-
 RESOURCES=$(cat <<-EOF
 {
   "deploy-service-broker": { 
     "instance_type": {"id": "$scs_broker_deployer_type"}
   },
-  "bregister-service-broker": {
+  "register-service-broker": {
     "instance_type": {"id": "$scs_broker_registrar_type"}
   },
   "run-smoke-tests": {
     "instance_type": {"id": "$scs_smoke_test_type"}
   },
   "destroy-service-broker": {
-    "instance_type": {"id": "$scs_broker_deregistrar_type"}
+    "instance_typet": {"id": "$scs_broker_deregistrar_type"}
   }
 }
 EOF
 )
-
+###end resource config
 OTHER_AZS=$(fn_other_azs $OTHER_JOB_AZS)
 
 NETWORK=$(cat <<-EOF
