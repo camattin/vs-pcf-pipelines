@@ -31,7 +31,7 @@ if [[ -z "$SCS_SMOKE_TEST_TYPE" ]]; then
 else
    scs_smoke_test_type="$SCS_SMOKE_TEST_TYPE"
 fi
-if [[ -z "SCS_BROKER_DEREGISTRAR_TYPE" ]]; then
+if [[ -z "$SCS_BROKER_DEREGISTRAR_TYPE" ]]; then
    scs_broker_deregistrar_type="automatic"
 else
    scs_broker_deregistrar_type="$SCS_BROKER_DEREGISTRAR_TYPE"
