@@ -44,16 +44,16 @@ fi
 RESOURCES=$(cat <<-EOF
 {
   "deploy-service-broker": { 
-    "instance_type": {"$scs_broker_deployer_type"}
+    "instance_type": {"id": "$scs_broker_deployer_type"}
   },
-  "register-service-broker": {
-    "instance_type": {"$scs_broker_registrar_type"}
+  "bregister-service-broker": {
+    "instance_type": {"id": "$scs_broker_registrar_type"}
   },
   "run-smoke-tests": {
-    "instance_type": {"$scs_smoke_test_type"}
+    "instance_type": {"id": "$scs_smoke_test_type"}
   },
   "destroy-service-broker": {
-    "instance_type": {"$scs_broker_deregistrar_type"}
+    "instance_type": {"id": "$scs_broker_deregistrar_type"}
   }
 }
 EOF
