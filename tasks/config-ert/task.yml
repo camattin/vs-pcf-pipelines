@@ -142,5 +142,5 @@ inputs:
   - name: vs-pcf-pipelines
 
 run:
-  path: vs-pcf-pipelines/tasks/reconfig-ert/task.sh
+  path: vs-pcf-pipelines/tasks/config-ert/task.sh
 
