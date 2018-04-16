@@ -118,19 +118,6 @@ cf_properties=$(
     --arg mysql_proxy_static_ips "$MYSQL_PROXY_STATIC_IPS" \
     --arg mysql_proxy_service_hostname "$MYSQL_PROXY_SERVICE_HOSTNAME" \
     --arg mysql_remote_admin "$MYSQL_REMOTE_ADMIN" \
-    --arg mysql_backups "$MYSQL_BACKUPS" \
-    --arg mysql_backups_s3_endpoint_url "$MYSQL_BACKUPS_S3_ENDPOINT_URL" \
-    --arg mysql_backups_s3_bucket_name "$MYSQL_BACKUPS_S3_BUCKET_NAME" \
-    --arg mysql_backups_s3_bucket_path "$MYSQL_BACKUPS_S3_BUCKET_PATH" \
-    --arg mysql_backups_s3_access_key_id "$MYSQL_BACKUPS_S3_ACCESS_KEY_ID" \
-    --arg mysql_backups_s3_secret_access_key "$MYSQL_BACKUPS_S3_SECRET_ACCESS_KEY" \
-    --arg mysql_backups_s3_cron_schedule "$MYSQL_BACKUPS_S3_CRON_SCHEDULE" \
-    --arg mysql_backups_scp_server "$MYSQL_BACKUPS_SCP_SERVER" \
-    --arg mysql_backups_scp_port "$MYSQL_BACKUPS_SCP_PORT" \
-    --arg mysql_backups_scp_user "$MYSQL_BACKUPS_SCP_USER" \
-    --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
-    --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
-    --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     '
@@ -389,62 +376,6 @@ cf_properties=$(
       }
     }
 
-    +
-
-    # MySQL Backups
-    if $mysql_backups == "s3" then
-      {
-        ".properties.mysql_backups": {
-          "value": "s3"
-        },
-        ".properties.mysql_backups.s3.endpoint_url":  {
-          "value": $mysql_backups_s3_endpoint_url
-        },
-        ".properties.mysql_backups.s3.bucket_name":  {
-          "value": $mysql_backups_s3_bucket_name
-        },
-        ".properties.mysql_backups.s3.bucket_path":  {
-          "value": $mysql_backups_s3_bucket_path
-        },
-        ".properties.mysql_backups.s3.access_key_id":  {
-          "value": $mysql_backups_s3_access_key_id
-        },
-        ".properties.mysql_backups.s3.secret_access_key":  {
-           "value": {
-             "secret": $mysql_backups_s3_secret_access_key
-           }
-        },
-        ".properties.mysql_backups.s3.cron_schedule":  {
-          "value": $mysql_backups_s3_cron_schedule
-        }
-      }
-    elif $mysql_backups == "scp" then
-      {
-        ".properties.mysql_backups": {
-          "value": "scp"
-        },
-        ".properties.mysql_backups.scp.server": {
-          "value": $mysql_backups_scp_server
-        },
-        ".properties.mysql_backups.scp.port": {
-          "value": $mysql_backups_scp_port
-        },
-        ".properties.mysql_backups.scp.user": {
-          "value": $mysql_backups_scp_user
-        },
-        ".properties.mysql_backups.scp.key": {
-          "value": $mysql_backups_scp_key
-        },
-        ".properties.mysql_backups.scp.destination": {
-          "value": $mysql_backups_scp_destination
-        },
-        ".properties.mysql_backups.scp.cron_schedule" : {
-          "value": $mysql_backups_scp_cron_schedule
-        }
-      }
-    else
-      .
-    end
     '
 )
 
