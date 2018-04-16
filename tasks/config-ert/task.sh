@@ -33,11 +33,33 @@ if [[ -z "$SAML_SSL_CERT" ]]; then
   SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
 fi
 
-if [[ -z "$AUTOSCALING_ERRAND_TYPE" ]]; then
-   autoscaling_errand_type="automatic"
-else
-   autoscaling_errand_type="$AUTOSCALING_ERRAND_TYPE"
+function formatCredhubEncryptionKeysJson() {
+    local credhub_encryption_key_name1="${1}"
+    local credhub_encryption_key_secret1=${2//$'\n'/'\n'}
+    local credhub_primary_encryption_name="${3}"
+    credhub_encryption_keys_json="{
+            \"name\": \"$credhub_encryption_key_name1\",
+            \"key\":{
+                \"secret\": \"$credhub_encryption_key_secret1\"
+             }"
+    if [[ "${credhub_primary_encryption_name}" == $credhub_encryption_key_name1 ]]; then
+        credhub_encryption_keys_json="$credhub_encryption_keys_json, \"primary\": true}"
+    else
+        credhub_encryption_keys_json="$credhub_encryption_keys_json}"
+    fi
+    echo "$credhub_encryption_keys_json"
+}
+
+credhub_encryption_keys_json=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME1}" "${CREDHUB_ENCRYPTION_KEY_SECRET1}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
+if isPopulated "${CREDHUB_ENCRYPTION_KEY_NAME2}"; then
+    credhub_encryption_keys_json2=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME2}" "${CREDHUB_ENCRYPTION_KEY_SECRET2}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
+    credhub_encryption_keys_json="$credhub_encryption_keys_json,$credhub_encryption_keys_json2"
 fi
+if isPopulated "${CREDHUB_ENCRYPTION_KEY_NAME3}"; then
+    credhub_encryption_keys_json3=$(formatCredhubEncryptionKeysJson "${CREDHUB_ENCRYPTION_KEY_NAME3}" "${CREDHUB_ENCRYPTION_KEY_SECRET3}" "${CREDHUB_PRIMARY_ENCRYPTION_NAME}")
+    credhub_encryption_keys_json="$credhub_encryption_keys_json,$credhub_encryption_keys_json3"
+fi
+credhub_encryption_keys_json="[$credhub_encryption_keys_json]"
 
 cf_properties=$(
   jq -n \
@@ -109,7 +131,8 @@ cf_properties=$(
     --arg mysql_backups_scp_key "$MYSQL_BACKUPS_SCP_KEY" \
     --arg mysql_backups_scp_destination "$MYSQL_BACKUPS_SCP_DESTINATION" \
     --arg mysql_backups_scp_cron_schedule "$MYSQL_BACKUPS_SCP_CRON_SCHEDULE" \
-    --arg container_networking_nw_cidr "$CONTAINER_NETWORKING_NW_CIDR" \
+    --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
+    --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     '
     {
       ".properties.system_blobstore": {
@@ -121,8 +144,8 @@ cf_properties=$(
       ".properties.route_services.enable.ignore_ssl_cert_verification": {
         "value": $ignore_ssl_cert
       },
-      ".properties.container_networking_network_cidr": {
-        "value": $container_networking_nw_cidr
+      ".properties.container_networking_interface_plugin.silk.network_cidr": {
+        "value": $container_networking_interface_plugin
       },
       ".properties.security_acknowledgement": {
         "value": $security_acknowledgement
@@ -172,7 +195,7 @@ cf_properties=$(
       ".tcp_router.static_ips": {
         "value": $tcp_router_static_ips
       },
-      ".push-apps-manager.company_name": {
+      ".properties.push_apps_manager_company_name": {
         "value": $company_name
       },
       ".diego_brain.static_ips": {
@@ -199,18 +222,6 @@ cf_properties=$(
         }
       }
     end
-
-    +
-
-    # SSL Termination
-    {
-      ".properties.networking_poe_ssl_cert": {
-        "value": {
-          "cert_pem": $cert_pem,
-          "private_key_pem": $private_key_pem
-        }
-      }
-    }
 
     +
 
@@ -371,6 +382,15 @@ cf_properties=$(
 
     +
 
+    # Credhub encryption keys
+    {
+      ".properties.credhub_key_encryption_passwords": {
+        "value": $credhub_encryption_keys
+      }
+    }
+
+    +
+
     # MySQL Backups
     if $mysql_backups == "s3" then
       {
@@ -450,6 +470,7 @@ cf_resources=$(
   jq -n \
     --arg iaas "$IAAS" \
     --argjson consul_server_instances $CONSUL_SERVER_INSTANCES \
+    --argjson credhub_instances $CREDHUB_INSTANCES \
     --argjson nats_instances $NATS_INSTANCES \
     --argjson nfs_server_instances $NFS_SERVER_INSTANCES \
     --argjson mysql_proxy_instances $MYSQL_PROXY_INSTANCES \
@@ -471,7 +492,6 @@ cf_resources=$(
     --argjson doppler_instances $DOPPLER_INSTANCES \
     --argjson internet_connected $INTERNET_CONNECTED \
     --arg diego_cell_type "$DIEGO_CELL_TYPE" \
-    --arg autoscaling_errand_type "$AUTOSCALING_ERRAND_TYPE" \
     --arg ha_proxy_elb_name "$HA_PROXY_LB_NAME" \
     --arg ha_proxy_floating_ips "$HAPROXY_FLOATING_IPS" \
     --arg tcp_router_nsx_security_group "${TCP_ROUTER_NSX_SECURITY_GROUP}" \
@@ -530,6 +550,7 @@ cf_resources=$(
 
     {
       "consul_server": { "instances": $consul_server_instances },
+      "credhub": { "instances": $credhub_instances },
       "nats": { "instances": $nats_instances },
       "nfs_server": { "instances": $nfs_server_instances },
       "mysql_proxy": { "instances": $mysql_proxy_instances },
@@ -545,7 +566,6 @@ cf_resources=$(
       "cloud_controller_worker": { "instances": $cloud_controller_worker_instances },
       "diego_brain": { "instances": $diego_brain_instances },
       "diego_cell": { "instances": $diego_cell_instances },
-      "autoscaling-register-broker": { "instance_type": { "id": $autoscaling_errand_type } },
       "loggregator_trafficcontroller": { "instances": $loggregator_tc_instances },
       "tcp_router": { "instances": $tcp_router_instances },
       "syslog_adapter": { "instances": $syslog_adapter_instances },
@@ -650,7 +670,7 @@ if [[ -z "$ERRANDS_TO_DISABLE" ]] || [[ "$ERRANDS_TO_DISABLE" == "none" ]]; then
   echo "No post-deploy errands to disable"
 else
   enabled_errands=$(
-  om-linux -t https://${OPS_MGR_HOST} -u $OPS_MGR_USR -p $OPS_MGR_PWD -k errands --product-name cf |
+  om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k errands --product-name cf |
   tail -n+4 | head -n-1 | grep -v false | cut -d'|' -f2 | tr -d ' '
   )
   if [[ "$ERRANDS_TO_DISABLE" == "all" ]]; then
@@ -673,7 +693,7 @@ else
   else
     while read errand; do
       echo -n Disabling $errand...
-      om-linux -t https://$OPS_MGR_HOST -u $OPS_MGR_USR -p $OPS_MGR_PWD -k set-errand-state --product-name cf --errand-name $errand --post-deploy-state "disabled"
+      om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k set-errand-state --product-name cf --errand-name $errand --post-deploy-state "disabled"
       echo done
     done < <(echo "$will_disable")
   fi
@@ -683,7 +703,7 @@ if [[ -z "$ERRANDS_TO_WHENCHANGED" ]] || [[ "$ERRANDS_TO_WHENCHANGED" == "none" 
   echo "No post-deploy errands to set to when-changed"
 else
   enabled_errands=$(
-  om-linux -t https://${OPS_MGR_HOST} -u $OPS_MGR_USR -p $OPS_MGR_PWD -k errands --product-name cf |
+  om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k errands --product-name cf |
   tail -n+4 | head -n-1 | cut -d'|' -f2 | tr -d ' '
   )
   if [[ "$ERRANDS_TO_WHENCHANGED" == "all" ]]; then
@@ -706,7 +726,7 @@ else
   else
     while read errand; do
       echo -n Disabling $errand...
-      om-linux -t https://$OPS_MGR_HOST -u $OPS_MGR_USR -p $OPS_MGR_PWD -k set-errand-state --product-name cf --errand-name $errand --post-deploy-state "when-changed"
+      om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k set-errand-state --product-name cf --errand-name $errand --post-deploy-state "when-changed"
       echo done
     done < <(echo "$will_whenchanged")
   fi
@@ -716,7 +736,7 @@ if [[ -z "$PREDELETE_ERRANDS_TO_DISABLE" ]] || [[ "$PREDELETE_ERRANDS_TO_DISABLE
   echo "No pre-delete errands to disable"
 else
   enabled_errands=$(
-  om-linux -t https://${OPS_MGR_HOST} -u $OPS_MGR_USR -p $OPS_MGR_PWD -k errands --product-name cf |
+  om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k errands --product-name cf |
   tail -n+4 | head -n-1 | grep -v false | cut -d'|' -f2 | tr -d ' '
   )
   if [[ "$PREDELETE_ERRANDS_TO_DISABLE" == "all" ]]; then
@@ -739,7 +759,7 @@ else
   else
     while read errand; do
       echo -n Disabling $errand...
-      om-linux -t https://$OPS_MGR_HOST -u $OPS_MGR_USR -p $OPS_MGR_PWD -k set-errand-state --product-name cf --errand-name $errand --pre-delete-state "disabled"
+      om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k set-errand-state --product-name cf --errand-name $errand --pre-delete-state "disabled"
       echo done
     done < <(echo "$will_disable")
   fi
