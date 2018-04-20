@@ -202,7 +202,9 @@ jq -n \
   --arg network "$INFRA_NETWORK_NAME" \
   '
   {
-    "singleton_availability_zone": $singleton_availability_zone,
+    "singleton_availability_zone": {
+      "name": $singleton_availability_zone
+    }
     "network": {
       "name": $network
     }
