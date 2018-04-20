@@ -123,7 +123,7 @@ network_configuration=$(
               "reserved_ip_ranges": $infra_reserved_ip_ranges,
               "dns": $infra_dns,
               "gateway": $infra_gateway,
-              "availability_zones": ($infra_availability_zones | split(","))
+              "availability_zone_names": ($infra_availability_zones | split(","))
             }
           ]
         },
@@ -137,7 +137,7 @@ network_configuration=$(
               "reserved_ip_ranges": $deployment_reserved_ip_ranges,
               "dns": $deployment_dns,
               "gateway": $deployment_gateway,
-              "availability_zones": ($deployment_availability_zones | split(","))
+              "availability_zone_names": ($deployment_availability_zones | split(","))
             }
           ]
         },
@@ -151,7 +151,7 @@ network_configuration=$(
               "reserved_ip_ranges": $services_reserved_ip_ranges,
               "dns": $services_dns,
               "gateway": $services_gateway,
-              "availability_zones": ($services_availability_zones | split(","))
+              "availability_zone_names": ($services_availability_zones | split(","))
             }
           ]
         },
@@ -165,7 +165,7 @@ network_configuration=$(
               "reserved_ip_ranges": $dynamic_services_reserved_ip_ranges,
               "dns": $dynamic_services_dns,
               "gateway": $dynamic_services_gateway,
-              "availability_zones": ($dynamic_services_availability_zones | split(","))
+              "availability_zone_names": ($dynamic_services_availability_zones | split(","))
             }
           ]
         }
