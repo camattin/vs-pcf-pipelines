@@ -198,16 +198,16 @@ security_configuration=$(
 
 network_assignment=$(
 jq -n \
-  --arg singleton_availability_zone "$OPS_DIR_SINGLETON" \
+  --arg infra_availability_zones "$INFRA_NW_AZS" \
   --arg network "$INFRA_NETWORK_NAME" \
   '
   {
-    "singleton_availability_zone": {
-      "name": $singleton_availability_zone
-    }
-    "network": {
-      "name": $network
-    }
+  "singleton_availability_zone": {
+    "name": $singleton_availability_zone
+  },
+  "network": {
+    "name": $network
+  }
   }'
 )
 
