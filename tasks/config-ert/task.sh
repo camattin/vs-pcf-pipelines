@@ -7,6 +7,8 @@ env
 # Don't generate any certs, always provide them in the secrets
 #source pcf-pipelines/functions/generate_cert.sh
 
+declare networking_poe_ssl_certs_json
+
 if [[ -z "$SSL_CERT" ]]; then
   domains=(
     "*.${SYSTEM_DOMAIN}"
@@ -18,6 +20,16 @@ if [[ -z "$SSL_CERT" ]]; then
   certificates=$(generate_cert "${domains[*]}")
   SSL_CERT=`echo $certificates | jq --raw-output '.certificate'`
   SSL_PRIVATE_KEY=`echo $certificates | jq --raw-output '.key'`
+else
+  cert=$SSL_CERT
+  key=$SSL_PRIVATE_KEY
+  networking_poe_ssl_certs_json="[{
+    \"name\": \"$POE_SSL_NAME\",
+    \"certificate\": {
+      \"cert_pem\": \"$cert\",
+      \"private_key_pem\": \"$key\"
+    }
+  }]"
 fi
 
 
@@ -118,6 +130,7 @@ cf_properties=$(
     --arg mysql_proxy_static_ips "$MYSQL_PROXY_STATIC_IPS" \
     --arg mysql_proxy_service_hostname "$MYSQL_PROXY_SERVICE_HOSTNAME" \
     --arg mysql_remote_admin "$MYSQL_REMOTE_ADMIN" \
+    --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     '
