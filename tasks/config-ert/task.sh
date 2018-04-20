@@ -21,8 +21,10 @@ if [[ -z "$SSL_CERT" ]]; then
   SSL_CERT=`echo $certificates | jq --raw-output '.certificate'`
   SSL_PRIVATE_KEY=`echo $certificates | jq --raw-output '.key'`
 else
-  cert=$SSL_CERT
-  key=$SSL_PRIVATE_KEY
+#  cert=$SSL_CERT
+#  key=$SSL_PRIVATE_KEY
+  cert=${SSL_CERT1//$'\n'/'\n'}
+  key=${SSL_PRIVATE_KEY//$'\n'/'\n'}
   networking_poe_ssl_certs_json="[{
     \"name\": \"$POE_SSL_NAME\",
     \"certificate\": {
