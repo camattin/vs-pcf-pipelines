@@ -198,7 +198,7 @@ security_configuration=$(
 
 network_assignment=$(
 jq -n \
-  --arg singleton_availability_zone "$ERT_SINGLETON_JOB_AZ" \
+  --arg singleton_availability_zone "$OPS_DIR_SINGLETON" \
   --arg network "$INFRA_NETWORK_NAME" \
   '
   {
