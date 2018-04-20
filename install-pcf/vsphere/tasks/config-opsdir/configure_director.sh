@@ -11,7 +11,7 @@ om-linux --version
 
 function configure_director () {
 
-if [[ $nsx_networking_enabled = "true" ]]; then
+if [[ "$NSX_CA_CERTIFICATE" = "true" ]]; then
 iaas_configuration=$(cat <<-EOF
 {
   "vcenter_host": "$VCENTER_HOST",
