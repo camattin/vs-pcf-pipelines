@@ -203,7 +203,9 @@ jq -n \
   '
   {
     "singleton_availability_zone": $singleton_availability_zone,
-    "network": $network
+    "network": {
+      "name": $network
+    }
   }'
 )
 
