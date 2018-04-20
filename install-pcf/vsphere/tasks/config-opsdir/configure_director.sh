@@ -52,7 +52,6 @@ iaas_configuration=$(cat <<-EOF
 EOF
 )
 fi
-)
 
 az_configuration=$(cat <<-EOF
 {
