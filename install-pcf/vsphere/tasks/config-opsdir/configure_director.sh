@@ -193,7 +193,7 @@ om-linux \
   --skip-ssl-validation \
   --username $OPS_MGR_USR \
   --password $OPS_MGR_PWD \
-  configure-bosh \
+  configure-director \
   --iaas-configuration "$iaas_configuration" \
   --director-configuration "$director_config"
 
@@ -218,7 +218,7 @@ om-linux \
   --skip-ssl-validation \
   --username $OPS_MGR_USR \
   --password $OPS_MGR_PWD \
-  configure-bosh \
+  configure-director \
   --networks-configuration "$network_configuration" \
   --network-assignment "$network_assignment" \
   --security-configuration "$security_configuration"
