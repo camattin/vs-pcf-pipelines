@@ -384,6 +384,15 @@ cf_properties=$(
 
     +
 
+    # SSL Termination
+    {
+      ".properties.networking_poe_ssl_certs": {
+        "value": $networking_poe_ssl_certs
+      }
+    }
+
+    +
+
     # Credhub encryption keys
     {
       ".properties.credhub_key_encryption_passwords": {
