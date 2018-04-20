@@ -32,6 +32,7 @@ iaas_configuration=$(cat <<-EOF
   "nsx_ca_certificate": "$NSX_CA_CERTIFICATE"
 }
 EOF
+)
 else
 iaas_configuration=$(cat <<-EOF
 {
@@ -49,6 +50,7 @@ iaas_configuration=$(cat <<-EOF
   "nsx_networking_enabled": $NSX_NETWORKING_ENABLED
 }
 EOF
+)
 fi
 )
 
