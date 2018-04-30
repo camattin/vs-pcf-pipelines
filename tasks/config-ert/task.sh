@@ -144,6 +144,8 @@ cf_properties=$(
     --arg company_name "$COMPANY_NAME" \
     --arg accent_color "$ACCENT_COLOR" \
     --arg apps_man_logo "$APPS_MAN_LOGO" \
+    --arg apps_man_square_logo "$APPS_MAN_SQUARE_LOGO" \
+    --arg apps_man_favicon "$APPS_MAN_FAVICON" \
     --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     '
@@ -213,6 +215,12 @@ cf_properties=$(
       },
       ".properties.push_apps_manager_logo": {
         "value": $apps_man_logo
+      },
+      ".properties.push_apps_manager_square_logo": {
+        "value": $apps_man_square_logo
+      },
+      ".properties.push_apps_manager_favicon": {
+        "value": $apps_man_favicon
       },
       ".diego_brain.static_ips": {
         "value": $ssh_static_ips
