@@ -131,12 +131,12 @@ cf_properties=$(
     --arg mysql_proxy_static_ips "$MYSQL_PROXY_STATIC_IPS" \
     --arg mysql_proxy_service_hostname "$MYSQL_PROXY_SERVICE_HOSTNAME" \
     --arg mysql_remote_admin "$MYSQL_REMOTE_ADMIN" \
-    --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
-    --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     --arg company_name "$COMPANY_NAME" \
     --arg accent_color "$ACCENT_COLOR" \
     --arg apps_man_logo "$APPS_MAN_LOGO" \
+    --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
+    --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     '
     {
       ".properties.system_blobstore": {
