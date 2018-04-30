@@ -143,9 +143,6 @@ cf_properties=$(
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     --arg company_name "$COMPANY_NAME" \
     --arg accent_color "$ACCENT_COLOR" \
-    --arg apps_man_logo "$APPS_MAN_LOGO" \
-    --arg apps_man_square_logo "$APPS_MAN_SQUARE_LOGO" \
-    --arg apps_man_favicon "$APPS_MAN_FAVICON" \
     --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     '
@@ -212,15 +209,6 @@ cf_properties=$(
       },
       ".properties.push_apps_manager_accent_color": {
         "value": $accent_color
-      },
-      ".properties.push_apps_manager_logo": {
-        "value": $apps_man_logo
-      },
-      ".properties.push_apps_manager_square_logo": {
-        "value": $apps_man_square_logo
-      },
-      ".properties.push_apps_manager_favicon": {
-        "value": $apps_man_favicon
       },
       ".diego_brain.static_ips": {
         "value": $ssh_static_ips
@@ -685,6 +673,37 @@ om-linux \
   --product-properties "$cf_properties" \
   --product-network "$cf_network" \
   --product-resources "$cf_resources"
+
+#
+# Logo work
+#
+logo_properties=$(
+  jq -n \
+    --arg apps_man_logo "$APPS_MAN_LOGO" \
+    --arg apps_man_square_logo "$APPS_MAN_SQUARE_LOGO" \
+    --arg apps_man_favicon "$APPS_MAN_FAVICON" \
+    '
+    {
+      ".properties.push_apps_manager_logo": {
+        "value": $apps_man_logo
+      },
+      ".properties.push_apps_manager_square_logo": {
+        "value": $apps_man_square_logo
+      },
+      ".properties.push_apps_manager_favicon": {
+        "value": $apps_man_favicon
+      }
+    }
+    '
+)
+om-linux \
+  --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+  --username $OPS_MGR_USR \
+  --password $OPS_MGR_PWD \
+  --skip-ssl-validation \
+  configure-product \
+  --product-name cf \
+  --product-properties "$logo_properties"
 
 if [[ -z "$ERRANDS_TO_DISABLE" ]] || [[ "$ERRANDS_TO_DISABLE" == "none" ]]; then
   echo "No post-deploy errands to disable"
