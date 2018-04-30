@@ -680,16 +680,49 @@ om-linux \
 logo_properties=$(
   jq -n \
     --arg apps_man_logo "$APPS_MAN_LOGO" \
-    --arg apps_man_square_logo "$APPS_MAN_SQUARE_LOGO" \
-    --arg apps_man_favicon "$APPS_MAN_FAVICON" \
     '
     {
       ".properties.push_apps_manager_logo": {
         "value": $apps_man_logo
-      },
+      }
+    }
+    '
+)
+om-linux \
+  --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+  --username $OPS_MGR_USR \
+  --password $OPS_MGR_PWD \
+  --skip-ssl-validation \
+  configure-product \
+  --product-name cf \
+  --product-properties "$logo_properties"
+
+squarelogo_properties=$(
+  jq -n \
+    --arg apps_man_square_logo "$APPS_MAN_SQUARE_LOGO" \
+    '
+    {
       ".properties.push_apps_manager_square_logo": {
         "value": $apps_man_square_logo
-      },
+      }
+    }
+    '
+)
+om-linux \
+  --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+  --username $OPS_MGR_USR \
+  --password $OPS_MGR_PWD \
+  --skip-ssl-validation \
+  configure-product \
+  --product-name cf \
+  --product-properties "$squarelogo_properties"
+
+
+favico_properties=$(
+  jq -n \
+    --arg apps_man_favicon "$APPS_MAN_FAVICON" \
+    '
+    {
       ".properties.push_apps_manager_favicon": {
         "value": $apps_man_favicon
       }
@@ -703,7 +736,7 @@ om-linux \
   --skip-ssl-validation \
   configure-product \
   --product-name cf \
-  --product-properties "$logo_properties"
+  --product-properties "$favico_properties"
 
 if [[ -z "$ERRANDS_TO_DISABLE" ]] || [[ "$ERRANDS_TO_DISABLE" == "none" ]]; then
   echo "No post-deploy errands to disable"
