@@ -260,6 +260,7 @@ cf_properties=$(
         "value": "internal"
       }
     }
+    end
 
     +
 
