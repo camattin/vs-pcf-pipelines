@@ -94,7 +94,6 @@ cf_properties=$(
     --arg disable_insecure_cookies "$DISABLE_INSECURE_COOKIES" \
     --arg router_request_timeout_seconds "$ROUTER_REQUEST_TIMEOUT_IN_SEC" \
     --arg tcp_router_static_ips "$TCP_ROUTER_STATIC_IPS" \
-    --arg company_name "$COMPANY_NAME" \
     --arg ssh_static_ips "$SSH_STATIC_IPS" \
     --arg cert_pem "$SSL_CERT" \
     --arg private_key_pem "$SSL_PRIVATE_KEY" \
@@ -135,6 +134,9 @@ cf_properties=$(
     --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
+    --arg company_name "$COMPANY_NAME" \
+    --arg accent_color "$ACCENT_COLOR" \
+    --arg apps_man_logo "$APPS_MAN_LOGO" \
     '
     {
       ".properties.system_blobstore": {
@@ -199,6 +201,12 @@ cf_properties=$(
       },
       ".properties.push_apps_manager_company_name": {
         "value": $company_name
+      },
+      ".properties.push_apps_manager_accent_color": {
+        "value": $accent_color
+      },
+      ".properties.push_apps_manager_logo": {
+        "value": $apps_man_logo
       },
       ".diego_brain.static_ips": {
         "value": $ssh_static_ips
