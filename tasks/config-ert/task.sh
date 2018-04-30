@@ -131,6 +131,15 @@ cf_properties=$(
     --arg mysql_proxy_static_ips "$MYSQL_PROXY_STATIC_IPS" \
     --arg mysql_proxy_service_hostname "$MYSQL_PROXY_SERVICE_HOSTNAME" \
     --arg mysql_remote_admin "$MYSQL_REMOTE_ADMIN" \
+    --arg system_blobstore "$SYSTEM_BLOBSTORE" \
+    --arg system_blobstore_external_endpoint "$SYSTEM_BLOBSTORE_EXTERNAL_ENDPOINT" \
+    --arg system_blobstore_external_buildpacks_bucket "$SYSTEM_BLOBSTORE_EXTERNAL_BUILDPACKS_BUCKET" \
+    --arg system_blobstore_external_droplets_bucket "$SYSTEM_BLOBSTORE_EXTERNAL_DROPLETS_BUCKET" \
+    --arg system_blobstore_external_packages_bucket "$SYSTEM_BLOBSTORE_EXTERNAL_PACKAGES_BUCKET" \
+    --arg system_blobstore_external_resources_bucket "$SYSTEM_BLOBSTORE_EXTERNAL_RESOURCES_BUCKET" \
+    --arg system_blobstore_external_access_key "$SYSTEM_BLOBSTORE_EXTERNAL_ACCESS_KEY" \
+    --arg system_blobstore_external_secret_key "$SYSTEM_BLOBSTORE_EXTERNAL_SECRET_KEY" \
+    --arg system_blobstore_external_signature_version  "$SYSTEM_BLOBSTORE_EXTERNAL_SIGNATURE_VERSION" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     --arg company_name "$COMPANY_NAME" \
     --arg accent_color "$ACCENT_COLOR" \
@@ -139,9 +148,6 @@ cf_properties=$(
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     '
     {
-      ".properties.system_blobstore": {
-        "value": "internal"
-      },
       ".properties.logger_endpoint_port": {
         "value": $loggregator_endpoint_port
       },
@@ -210,6 +216,48 @@ cf_properties=$(
       },
       ".diego_brain.static_ips": {
         "value": $ssh_static_ips
+      }
+    }
+
+    +
+
+    # Blobstore
+    if $system_blobstore == "external" then
+    {
+      ".properties.system_blobstore": {
+        "value": $system_blobstore 
+      },
+      ".properties.system_blobstore.external.endpoint": {
+        "value": $system_blobstore_external_endpoint
+      },
+      ".properties.system_blobstore.external.buildpacks_bucket": {
+        "value": $system_blobstore_external_buildpacks_bucket
+      },
+      ".properties.system_blobstore.external.droplets_bucket": {
+        "value": $system_blobstore_external_droplets_bucket
+      },
+      ".properties.system_blobstore.external.packages_bucket": {
+        "value": $system_blobstore_external_packages_bucket
+      },
+      ".properties.system_blobstore.external.resources_bucket": {
+        "value": $system_blobstore_external_resources_bucket
+      },
+      ".properties.system_blobstore.external.access_key": {
+        "value": $system_blobstore_external_access_key
+      },
+      ".properties.system_blobstore.external.secret_key": {
+        "value": {
+          secret: $system_blobstore_external_secret_key
+        }
+      },
+      ".properties.system_blobstore.external.signature_version": {
+        "value": $system_blobstore_external_signature_version
+      }
+    }
+    else
+    {
+      ".properties.system_blobstore": {
+        "value": "internal"
       }
     }
 
