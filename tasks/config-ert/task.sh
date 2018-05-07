@@ -745,7 +745,7 @@ if [[ ! -z "$APPS_MAN_FOOTER_TEXT" ]]; then
     '
     {
       ".properties.push_apps_manager_footer_text": {
-        "value": $apps_man_footer_text
+        "value": $apps_manager_footer_text
       }
     }
     ' 
