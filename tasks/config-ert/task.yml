@@ -151,7 +151,7 @@ params:
   APPS_MAN_LOGO:
   APPS_MAN_SQUARE_LOGO:
   APPS_MAN_FAVICON:
-
+  APPS_MAN_FOOTER_TEXT:
 
 inputs:
   - name: vs-pcf-pipelines

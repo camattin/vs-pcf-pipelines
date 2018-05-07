@@ -738,6 +738,33 @@ om-linux \
   --product-name cf \
   --product-properties "$favico_properties"
 
+if [ ! -z $APPS_MAN_FOOTER_TEXT ]; then
+  footer_text=$(
+  jq -n \
+    --arg apps_manager_footer_text "$APPS_MAN_FOOTER_TEXT" \
+    '
+    {
+      ".properties.push_apps_manager_footer_text": {
+        "value": $apps_man_footer_text
+      }
+    }
+    ' 
+)
+
+om-linux \
+  --target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+  --username $OPS_MGR_USR \
+  --password $OPS_MGR_PWD \
+  --skip-ssl-validation \
+  configure-product \
+  --product-name cf \
+  --product-properties "$footer_text"
+
+fi
+
+#
+# Errands work
+#
 if [[ -z "$ERRANDS_TO_DISABLE" ]] || [[ "$ERRANDS_TO_DISABLE" == "none" ]]; then
   echo "No post-deploy errands to disable"
 else
