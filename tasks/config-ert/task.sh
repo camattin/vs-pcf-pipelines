@@ -5,7 +5,7 @@ set -eux
 env
 
 # Don't generate any certs, always provide them in the secrets
-#source pcf-pipelines/functions/generate_cert.sh
+source pcf-pipelines/functions/generate_cert.sh
 
 declare networking_poe_ssl_certs_json
 
