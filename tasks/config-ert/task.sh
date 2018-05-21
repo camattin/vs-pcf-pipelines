@@ -142,7 +142,6 @@ cf_properties=$(
     --arg system_blobstore_external_signature_version  "$SYSTEM_BLOBSTORE_EXTERNAL_SIGNATURE_VERSION" \
     --arg container_networking_interface_plugin  "$CONTAINER_NETWORKING_INTERFACE_PLUGIN" \
     --arg company_name "$COMPANY_NAME" \
-    --arg accent_color "$ACCENT_COLOR" \
     --argjson networking_poe_ssl_certs "$networking_poe_ssl_certs_json" \
     --argjson credhub_encryption_keys "$credhub_encryption_keys_json" \
     '
@@ -206,9 +205,6 @@ cf_properties=$(
       },
       ".properties.push_apps_manager_company_name": {
         "value": $company_name
-      },
-      ".properties.push_apps_manager_accent_color": {
-        "value": $accent_color
       },
       ".diego_brain.static_ips": {
         "value": $ssh_static_ips
