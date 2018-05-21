@@ -45,6 +45,8 @@ if [[ -z "$SAML_SSL_CERT" ]]; then
   saml_certificates=$(generate_cert "${saml_cert_domains[*]}")
   SAML_SSL_CERT=$(echo $saml_certificates | jq --raw-output '.certificate')
   SAML_SSL_PRIVATE_KEY=$(echo $saml_certificates | jq --raw-output '.key')
+  echo "DEBUG_SAML_CERT: $SAML_SSL_CERT"
+  echo "DEBUG_SAML_CERT: $SAML_SSL_PRIVATE_KEY"
 fi
 
 function formatCredhubEncryptionKeysJson() {
